@@ -146,19 +146,22 @@ function safeParse(jsonString) {
    // router.reload();  // Remove this line if you don't want to reload the page
   };
 
-  const handleSetExtraData = (res) => {
-    setSelectedExtras((prev) => {
-      const exists = prev.find((extra) => extra.code === res.code);
-      if (exists) {
-        // Remove if already selected
-        return prev.filter((extra) => extra.code !== res.code);
-      } else {
-        // Add if not selected
-        return [...prev, res];
-      }
-    });
-  };
+  // const handleSetExtraData = (res) => {
+  //   setSelectedExtras((prev) => {
+  //     const exists = prev.find((extra) => extra.code === res.code);
+  //     if (exists) {
+  //       // Remove if already selected
+  //       return prev.filter((extra) => extra.code !== res.code);
+  //     } else {
+  //       // Add if not selected
+  //       return [...prev, res];
+  //     }
+  //   });
+  // };
   
+  const handleSetExtraData = (res) => {
+    setSelectedExtras([res]); // Change here: Set selectedExtras to a new array containing only the selected item
+};
 
   // Calculate the total pricing by adding selected insurance price to car pricing
   const carTotalWithInsurance = Math.round((data?.data?.car[0]?.car_total_pricing + selectedPrice) * 100) / 100;
@@ -788,7 +791,7 @@ function safeParse(jsonString) {
             ))}
           </ul>
         </div>
-        <div>
+        {/* <div>
           <h3>Selected Additional Options:</h3>
           <ul>
             {selectedExtras.map(extra => (
@@ -800,7 +803,7 @@ function safeParse(jsonString) {
           <span className="total-value">
             Total for Additional Options: {currency_symbol}{selectedExtras.reduce((total, extra) => total + Number(extra.price), 0).toFixed(2)}
           </span>
-        </div>
+        </div> */}
       </div>
     </div>
   </div>
