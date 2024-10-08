@@ -111,10 +111,15 @@ function MyTrips({ staticData }) {
 
 
 
-                       <Link
+                       {/* <Link
                       href={`/my-account?ids=${res.txn_id}&email=${res.user.email}`}
                       legacyBehavior
+                    > */}
+                     <Link
+                      href={`/trip-detail?ids=${res.txn_id}&email=${res.user.email}`}
+                      legacyBehavior
                     >
+
                       {staticData?.data?.view_details}
                     </Link>
 

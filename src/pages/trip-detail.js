@@ -1,3 +1,4 @@
+import React from 'react';
 import { useRouter } from "next/router";
 import he from 'he';
 // import StarRatings from "react-star-ratings";
@@ -45,6 +46,14 @@ function TripDetail(props) {
   } = useManageBookingQuery(dataS, {
     refetchOnMountOrArgChange: true,
   });
+
+   // Log the data to the console
+   React.useEffect(() => {
+    console.log('Static Data-------------:', staticData);
+    console.log('Booking Data---------------:', bookingData);
+  }, [staticData, bookingData]); // Run this effect when staticData or bookingData changes
+
+
   // const [bookingRating] = useBookingRatingMutation();
   const [cancelBooking, { isLoading: cancelLoading }] =
     useCancelBookingMutation();
