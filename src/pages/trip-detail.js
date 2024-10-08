@@ -54,6 +54,16 @@ function TripDetail(props) {
   }, [staticData, bookingData]); // Run this effect when staticData or bookingData changes
 
 
+  React.useEffect(() => {
+    if (bookingData?.data?.order) {
+      const { city, address, country } = bookingData.data.order;
+      console.log(`Address------------: ${city || 'N/A'}, ${address || 'N/A'}, ${country || 'N/A'}`);
+    } else {
+      console.log("Order data is missing or incomplete.");
+    }
+  }, [bookingData]);
+  
+
   // const [bookingRating] = useBookingRatingMutation();
   const [cancelBooking, { isLoading: cancelLoading }] =
     useCancelBookingMutation();
@@ -264,13 +274,29 @@ function TripDetail(props) {
                       <h2>{staticData?.data?.pick_up}</h2>
                       <p>Date: {moment(bookingData?.data?.pickup_datetime).format("DD MMM YYYY HH:mm")}</p>
                       <p>{staticData?.data?.location}: {bookingData?.data?.pickup_location}</p>
-                      <p>{staticData?.data?.address}: {address1} {he.decode(address2)}</p>
+                      {/* <p>{staticData?.data?.address}: {address1} {he.decode(address2)}</p>
+                     */}
+                      <p>
+    {staticData?.data?.address}: 
+    {bookingData?.data?.order?.address || 'N/A'}, 
+    {bookingData?.data?.order?.city || 'N/A'}, 
+    {bookingData?.data?.order?.country || 'N/A'}
+  </p>
+
                     </li>
                     <li>   
                       <h2>{staticData?.data?.drop_off}</h2>
                       <p>Date: {moment(bookingData?.data?.return_datetime).format("DD MMM YYYY HH:mm")}</p>
                       <p>{staticData?.data?.location}: {bookingData?.data?.return_location}</p>
-                      <p>{staticData?.data?.address}: {address1} {he.decode(address2)} </p>
+                      {/* <p>{staticData?.data?.address}: {address1} {he.decode(address2)} </p>
+                    */}
+                      <p>
+    {staticData?.data?.address}: 
+    {bookingData?.data?.order?.address || 'N/A'}, 
+    {bookingData?.data?.order?.city || 'N/A'}, 
+    {bookingData?.data?.order?.country || 'N/A'}
+  </p>
+
                     </li>
                   </ul>
 
