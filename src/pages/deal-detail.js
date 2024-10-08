@@ -36,8 +36,6 @@ const [selectedCodePrice, setSelectedCodePrice] = useState(0);
     (state) => state.headData
   );
 
-
-
   useEffect(() => {
     removeCookie('selected_extra_details');
   }, [])
@@ -110,10 +108,10 @@ function safeParse(jsonString) {
 }
 
   let eurocar_insurance = safeParse(data?.data?.eurocar_insurance);
-  console.log("====", eurocar_insurance);
+  console.log("==eeeeeuuuuuuurrrrrrroooooooooooooo==", eurocar_insurance);
 
   let eurocar_equipment = safeParse(data?.data?.eurocar_equipment);
-  console.info("---", eurocar_equipment);
+  console.info("--e-u-r-o--", eurocar_equipment);
 
   console.log("data", data?.data)
   // const handleRedirect = async (pro_code) => {
@@ -340,12 +338,16 @@ function safeParse(jsonString) {
       selectedService: {
         code: selectedCode,
         price: selectedCodePrice,  // Add the price here
+        //codeType: 'eurocar_insurance',
       },
       additionalServices: selectedExtras,
+      //codeType: "eurocar_equipment",
     };
   
     const queryString = new URLSearchParams({ bookingData: JSON.stringify(bookingData) }).toString();
   
+    console.log("@@@@@@@@@@@@@", queryString);
+
     if (token) {
       setTimeout(() => {
         let url = data?.data?.txn_id

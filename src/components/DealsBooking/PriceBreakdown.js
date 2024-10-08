@@ -476,12 +476,16 @@ function PriceBreakdown({
         const decodedData = decodeURIComponent(bookingData);
         const parsedData = JSON.parse(decodedData);
         console.log('Booking Data--------------:', parsedData);
+        
         setBookingDetails(parsedData);
       } catch (error) {
         console.error('Error parsing booking data:', error);
       }
     }
   }, [router.query]);
+
+  console.log('Selected Service Price:', bookingDetails?.selectedService?.price);
+
 
   let finalAmt = txn_id
     ? Number(carDetails?.grand_total) - Number(bookingDetails?.old_booking?.grandtotal)
@@ -571,6 +575,7 @@ function PriceBreakdown({
   </span>
 </p>
 <hr />
+
 
 {/* Display additional services */}
 <p>Additional Services:

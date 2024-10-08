@@ -70,6 +70,8 @@ const List = (props) => {
     refetchOnMountOrArgChange: true,
   });
 
+  console.log("----------------------------------------->>",staticData?.data);
+
   const handleCloseImptInfo = () => setImptinfo(false);
   const handleCloseFilter = () => setFilter(false);
 

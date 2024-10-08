@@ -162,7 +162,7 @@ function DealBooking(props) {
         // Decode and parse the booking data
         const decodedData = decodeURIComponent(bookingData);
         const parsedData = JSON.parse(decodedData);
-        console.log('Booking Data:', parsedData);
+        console.log('Booking Datammmmmmmmmmmmmmmmmmmmm:', parsedData);
         setBookingDetails(parsedData);
       } catch (error) {
         console.error('Error parsing booking data:', error);
@@ -365,7 +365,19 @@ console.log("Billing Details:", billingsDetails);
     Number(bookingData?.data?.old_booking?.grandtotal)
     : 0;
 
+    const selectedServiceCode = bookingDetails?.selectedService?.code; // Extract selectedService code
+const additionalServiceCode = bookingDetails?.additionalServices?.[0]?.code; // Extract first additionalService code
+
+// Log the extracted values for debugging
+console.log("Selected Service Code (euro_insurance_code):", selectedServiceCode);
+console.log("Additional Service Code (euro_equipment_code):", additionalServiceCode);
+
+
   const initialState = {
+            // Add the new fields
+  eurocar_insurance_code: bookingDetails?.selectedService?.code, // Pass selectedService code as euro_insurance_code
+  eurocar_equipment_code: bookingDetails?.additionalServices?.[0]?.code, // Pass additionalService code as euro_equipment_code
+
     car_id:
       txn_id && bookingData
         ? bookingData.data?.new_car?.car_detail_id
@@ -422,6 +434,7 @@ console.log("Billing Details:", billingsDetails);
       billingsDetails && billingsDetails.is_bussiness_booking
         ? billingsDetails.is_bussiness_booking
         : "yes",
+
     payment_type: txn_id && finalAmt ? (finalAmt > 0 ? "2" : "2") : "2",
     // user_name:
     //   billingsDetails && billingsDetails.user_name
@@ -505,9 +518,12 @@ console.log("Billing Details:", billingsDetails);
   });
 
   const handleSubmit = async (values, { resetForm }) => {
+
     const orderDataSubmit = {
       ...values,
       without_deal_credit_card: props.searchData?.without_credit_card,
+
+
       ...(userData?.hasOwnProperty("login_as") && {
         login_as: userData?.login_as,
       }),
@@ -525,7 +541,8 @@ console.log("Billing Details:", billingsDetails);
       ...(props?.host && { base_url: props?.host }),
     };
   
-  
+    // Log the entire orderDataSubmit object for debugging
+    console.log("Order Data Submitted --> TTTTTTTTTTTTT:", orderDataSubmit);
   
     try {
       let response =
@@ -534,6 +551,8 @@ console.log("Billing Details:", billingsDetails);
           : await orderBooking(orderDataSubmit).unwrap();
 
       if (response.status) {
+
+        console.log("Order Response--TTTTTTTTTTTTT:", response);
         // when guest login
         if (response?.userdata) {
           await setCookies("origin_rent_token", response?.userdata?.token);
