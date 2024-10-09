@@ -60,29 +60,106 @@ export default function Login(props) {
     password: Yup.string().required("Field is required"),
   });
 
-  const handleSubmit = async (values, {}) => {
-    let callbackUrl = Router.query?.callbackUrl
-      ? Router.query?.callbackUrl
-      : "";
+  // const handleSubmit = async (values, {}) => {
+  //   let callbackUrl = Router.query?.callbackUrl
+  //     ? Router.query?.callbackUrl
+  //     : "";
       
+  //   try {
+  //     const returned = await loginUser(values).unwrap();
+
+  //     checked
+  //       ? await setToStorage("remember", JSON.stringify(values))
+  //       : await clearStorage("remember");
+  //     await setCookies("origin_rent_token", returned?.data?.token);
+  //     await setCookies("origin_rent_userdata", JSON.stringify(returned?.data));
+  //     returned?.data?.lang_id &&
+  //       dispatch(
+  //         langUpdate({
+  //           lang: returned?.data?.lang_id,
+  //           lang_code: returned?.data?.lang_code,
+  //         })
+  //       );
+  //     dispatch(loggedIn(true));
+  //     dispatch(userDataUpdate(returned?.data));
+  //     console.log("returned :", returned, callbackUrl)
+  //     let url = callbackUrl
+  //       ? callbackUrl === "deal-booking"
+  //         ? returned?.data?.role_id == 3
+  //           ? "/list"
+  //           : callbackUrl
+  //         : callbackUrl
+  //       : "/";
+
+  //       console.log(url);
+  //       console.log(returned);
+
+  //     setTimeout(() => {
+
+  //       // console.log(url);
+  //       // Router.push(url);
+  //       // Router.push(url, { locale: returned?.data?.lang_code });
+  //       Router.push(url, url, { locale: returned?.data?.lang_code });
+  //     }, 500);
+
+  //     if (returned?.status) {
+  //       returned?.message && successMsg(returned?.message);
+  //     } else {
+  //       returned?.message && errorMsg(returned?.message);
+  //     }
+  //   } catch (error) {
+  //     let err = error?.data?.message
+  //       ? error?.data?.message
+  //       : error?.message
+  //       ? error?.message
+  //       : "Something went wrong";
+  //     if (err) errorMsg(err);
+  //   }
+  // };
+
+  const handleSubmit = async (values, {}) => {
+    let callbackUrl = Router.query?.callbackUrl ? Router.query?.callbackUrl : "";
+    
     try {
       const returned = await loginUser(values).unwrap();
-
-      checked
-        ? await setToStorage("remember", JSON.stringify(values))
-        : await clearStorage("remember");
-      await setCookies("origin_rent_token", returned?.data?.token);
-      await setCookies("origin_rent_userdata", JSON.stringify(returned?.data));
-      returned?.data?.lang_id &&
+  
+      // Remember me functionality
+      if (checked) {
+        await setToStorage("remember", JSON.stringify(values));
+      } else {
+        await clearStorage("remember");
+      }
+  
+      // Set cookies with secure settings
+      await setCookies("origin_rent_token", returned?.data?.token, {
+        path: '/',
+        maxAge: 30 * 24 * 60 * 60, // Cookie expires in 30 days
+        secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+        sameSite: 'strict', // Prevent CSRF attacks
+      });
+      
+      await setCookies("origin_rent_userdata", JSON.stringify(returned?.data), {
+        path: '/',
+        maxAge: 30 * 24 * 60 * 60, // Cookie expires in 30 days
+        secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+        sameSite: 'strict', // Prevent CSRF attacks
+      });
+  
+      // Update language settings in Redux state
+      if (returned?.data?.lang_id) {
         dispatch(
           langUpdate({
             lang: returned?.data?.lang_id,
             lang_code: returned?.data?.lang_code,
           })
         );
+      }
+  
+      // Set user as logged in and update user data in Redux store
       dispatch(loggedIn(true));
       dispatch(userDataUpdate(returned?.data));
-      console.log("returned :", returned, callbackUrl)
+  
+      // Determine redirect URL after login
       let url = callbackUrl
         ? callbackUrl === "deal-booking"
           ? returned?.data?.role_id == 3
@@ -90,18 +167,13 @@ export default function Login(props) {
             : callbackUrl
           : callbackUrl
         : "/";
-
-        console.log(url);
-        console.log(returned);
-
+  
+      // Delay for 500ms before redirecting
       setTimeout(() => {
-
-        // console.log(url);
-        // Router.push(url);
-        // Router.push(url, { locale: returned?.data?.lang_code });
         Router.push(url, url, { locale: returned?.data?.lang_code });
       }, 500);
-
+  
+      // Display success or error messages based on login response
       if (returned?.status) {
         returned?.message && successMsg(returned?.message);
       } else {
@@ -116,6 +188,7 @@ export default function Login(props) {
       if (err) errorMsg(err);
     }
   };
+  
 
   // const handleLoginWithGoogle = async () => {
   //   const result = await signIn("google");
